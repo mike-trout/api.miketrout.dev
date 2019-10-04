@@ -1,0 +1,36 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-miketrout-dev-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "api-miketrout-dev-static-ip"
+    networking.gke.io/managed-certificates: "api-miketrout-dev-certificate"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /experience
+        backend:
+          serviceName: experience-service-service
+          servicePort: 60000
+      - path: /experience/*
+        backend:
+          serviceName: experience-service-service
+          servicePort: 60000
+      - path: /projects
+        backend:
+          serviceName: projects-service-service
+          servicePort: 60001
+      - path: /projects/*
+        backend:
+          serviceName: projects-service-service
+          servicePort: 60001
+      - path: /skills
+        backend:
+          serviceName: skills-service-service
+          servicePort: 60002
+      - path: /skills/*
+        backend:
+          serviceName: skills-service-service
+          servicePort: 60002
