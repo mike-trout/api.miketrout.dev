@@ -18,5 +18,6 @@ script:
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file gcloud-service-account-secret.json
   - gcloud container clusters get-credentials gke-cluster --zone us-central1-a --project www-miketrout-dev
-  - kubectl apply -f api-miketrout-dev-certificate.yaml
-  - kubectl apply -f api-miketrout-dev-ingress.yaml
+  - gcloud info --format="value(config.account)"
+#  - kubectl apply -f api-miketrout-dev-certificate.yaml
+#  - kubectl apply -f api-miketrout-dev-ingress.yaml
