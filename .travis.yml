@@ -20,6 +20,7 @@ script:
   - gcloud container clusters get-credentials gke-cluster --zone us-central1-a --project www-miketrout-dev
   - kubectl apply -f ambassador-rbac.yaml
   - kubectl apply -f ambassador-service.yaml
+  - kubectl apply -f ambassador-module.yaml
   - kubectl apply -f ambassador-mappings.yaml
   - kubectl apply -f api-miketrout-dev-certificate.yaml
   - kubectl apply -f api-miketrout-dev-ingress.yaml
