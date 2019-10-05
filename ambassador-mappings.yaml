@@ -1,0 +1,36 @@
+---
+apiVersion: getambassador.io/v1
+kind: Mapping
+metadata:
+  name: experience-service-mapping
+spec:
+  prefix: /experience/
+  service: experience-service-service:60000
+  cors:
+    origins: https://www.miketrout.dev
+    methods: GET, OPTIONS
+    headers: Content-Type
+---
+apiVersion: getambassador.io/v1
+kind: Mapping
+metadata:
+  name: projects-service-mapping
+spec:
+  prefix: /projects/
+  service: projects-service-service:60001
+  cors:
+    origins: https://www.miketrout.dev
+    methods: GET, OPTIONS
+    headers: Content-Type
+---
+apiVersion: getambassador.io/v1
+kind: Mapping
+metadata:
+  name: skills-service-mapping
+spec:
+  prefix: /skills/
+  service: skills-service-service:60002
+  cors:
+    origins: https://www.miketrout.dev
+    methods: GET, OPTIONS
+    headers: Content-Type
