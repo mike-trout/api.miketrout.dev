@@ -2,12 +2,15 @@
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    servie: ambassador
   name: ambassador
 spec:
   type: NodePort
   externalTrafficPolicy: Local
   ports:
-    - port: 80
+    - name: ambassador
+      port: 8080
       targetPort: 8080
   selector:
     service: ambassador
