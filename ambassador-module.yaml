@@ -5,5 +5,10 @@ metadata:
   name: ambassador
 spec:
   config:
+    cors:
+      origins: https://www.miketrout.dev
+      methods: GET, HEAD, OPTIONS
+      headers: Content-Type
     diagnostics:
       enabled: false
+    use_remote_address: false
