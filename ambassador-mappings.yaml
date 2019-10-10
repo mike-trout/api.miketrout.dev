@@ -15,7 +15,7 @@ metadata:
 spec:
   prefix: /projects/
   rewrite: /api/projects/
-  service: projects-service-service:60001
+  service: projects-service-service:50001
 ---
 apiVersion: getambassador.io/v1
 kind: Mapping
