@@ -6,7 +6,7 @@ metadata:
 spec:
   prefix: /experience/
   rewrite: /experience/
-  service: experience-service-service:60000
+  service: experience-service-service:50000
 ---
 apiVersion: getambassador.io/v1
 kind: Mapping
@@ -23,4 +23,4 @@ metadata:
   name: skills-service-mapping
 spec:
   prefix: /skills/
-  service: skills-service-service:60002
+  service: skills-service-service:50002
