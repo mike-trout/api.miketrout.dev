@@ -24,3 +24,11 @@ metadata:
 spec:
   prefix: /skills/
   service: skills-service-service:50002
+---
+apiVersion: getambassador.io/v1
+kind: Mapping
+metadata:
+  name: employees-service-mapping
+spec:
+  prefix: /employees/
+  service: employees-service:50003
