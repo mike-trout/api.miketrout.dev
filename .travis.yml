@@ -1,26 +1,47 @@
 ---
-language: minimal
-
 branches:
   only:
     - master
 
-env:
-  global:
-    - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Do not prompt for user input when using any SDK methods.
+jobs:
+  include:
+    - stage: build
+      name: "Build Docker Image"
+      language: minimal
+      env:
+        - DOCKER_HUB_USERNAME=miketrout
+        - secure: "DgF/mYny6tYeObYuWQoQG1lbOX/Uc3lvUZ4CXGXdZDL5iu4DhNoFwgBhHDgOf6cTExQ4oE8aifh8r7HPr1kcZDyhn3YlnDpmflawyFwq+7a4lWMh3baq83jc2e4nh1D0v7ANrsbpJsyR7wMoy1EfjiOEm2b6lhx8+a+SCUMvhe7de4vIx2dUKQgZi3ispyLIVc3gmnguT1QchSGZKbJsEbfkE/dJCARMZNn2UaBHkdXwc2ur6MgkLwPRNQRMDV1j8fH+nvYKiaRjzdRfTKX16marbo/3fk5qQ4WIS/mrQYjWlkZlwiTIc3puFVM5A3gmAcRL2AbPcQ7rQEqO7p7btLCvQI9AG9ZKG0qeSY7aVzU2Z5gQ/lYmCNuhZ5H1MdfqTww71NmSmSxzyuFjK/zlxFLMaUTUl7rQgHIEvQxiRZXRRDnYZmFNmuoeYpjLWcOUmF72Oy52a9Zzyp79RCEyIhrzfqPm1Nd1NcKoV9JJ+BWdswlBsLVatkdhHJjJTfsdLFvGQrlHALwZTIsq9iDO1kSkd7Fc7ib1O8v6Mmk2l7SGB1dTXnR8zndM7szQpKKyBPRohCAH8ZwxlQdErBansgWB8GZvJjpiqFBLmZKBRfoi+83+jJ/e+Bh7ugWPzOAiNTaAVF5YPkuJiApilM6Z1udUMyMchqFFM6QsMGcUDHE="
+      services:
+        - docker
+      addons:
+        apt:
+          packages:
+            - docker-ce
+      script:
+        - docker --version
+        - docker build --tag miketrout/api.miketrout.dev .
+        - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+        - docker push miketrout/api.miketrout.dev
 
-before_install:
-  - openssl aes-256-cbc -K $encrypted_f911faa195a1_key -iv $encrypted_f911faa195a1_iv -in gcloud-service-account-secret.json.enc -out gcloud-service-account-secret.json -d
-
-script:
-  - curl https://sdk.cloud.google.com | bash > /dev/null
-  - source $HOME/google-cloud-sdk/path.bash.inc
-  - gcloud components update kubectl
-  - gcloud auth activate-service-account --key-file gcloud-service-account-secret.json
-  - gcloud container clusters get-credentials gke-cluster --zone us-central1-a --project www-miketrout-dev
-  - kubectl apply -f ambassador-rbac.yaml
-  - kubectl apply -f ambassador-service.yaml
-  - kubectl apply -f ambassador-module.yaml
-  - kubectl apply -f ambassador-mappings.yaml
-  - kubectl apply -f api-miketrout-dev-certificate.yaml
-  - kubectl apply -f api-miketrout-dev-ingress.yaml
+    - stage: deploy
+      name: "Deploy to GCP"
+      language: minimal
+      env:
+        - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # Do not prompt for user input when using any SDK methods.
+      before_install:
+        - openssl aes-256-cbc -K $encrypted_f911faa195a1_key -iv $encrypted_f911faa195a1_iv -in gcloud-service-account-secret.json.enc -out gcloud-service-account-secret.json -d
+      script:
+        - curl https://sdk.cloud.google.com | bash > /dev/null
+        - source $HOME/google-cloud-sdk/path.bash.inc
+        - gcloud components update kubectl
+        - gcloud auth activate-service-account --key-file gcloud-service-account-secret.json
+        - gcloud container clusters get-credentials gke-cluster --zone us-central1-a --project www-miketrout-dev
+        - kubectl apply -f ambassador-rbac.yaml
+        - kubectl apply -f ambassador-service.yaml
+        - kubectl apply -f ambassador-module.yaml
+        - kubectl apply -f ambassador-mappings.yaml
+        - kubectl apply -f api-miketrout-dev-deployment.yaml
+        - kubectl patch deployment api-miketrout-dev-deployment -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+        - kubectl apply -f api-miketrout-dev-service.yaml
+        - kubectl apply -f api-miketrout-dev-certificate.yaml
+        - kubectl apply -f api-miketrout-dev-ingress.yaml

@@ -2,6 +2,14 @@
 apiVersion: getambassador.io/v1
 kind: Mapping
 metadata:
+  name: api-miketrout-dev-service-mapping
+spec:
+  prefix: /
+  service: api-miketrout-dev-service:50004
+---
+apiVersion: getambassador.io/v1
+kind: Mapping
+metadata:
   name: experience-service-mapping
 spec:
   prefix: /experience/

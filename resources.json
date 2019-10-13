@@ -1,0 +1,8 @@
+{
+    "resources": [
+        "https://api.miketrout.dev/experience/",
+        "https://api.miketrout.dev/projects/",
+        "https://api.miketrout.dev/skills/"
+    ],
+    "selfLink": "https://api.miketrout.dev/"
+}
