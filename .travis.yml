@@ -19,8 +19,8 @@ jobs:
             - docker-ce
       script:
         - docker --version
-        - docker build --tag miketrout/api.miketrout.dev .
         - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+        - docker build --tag miketrout/api.miketrout.dev .
         - docker push miketrout/api.miketrout.dev
 
     - stage: deploy
